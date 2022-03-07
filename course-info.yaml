@@ -1,0 +1,8 @@
+type: hyperskill
+title: Secret Diary
+language: English
+summary: A password-protected diary application for writing down your personal thougths
+programming_language: Kotlin
+environment: Android
+content:
+- secret-diary

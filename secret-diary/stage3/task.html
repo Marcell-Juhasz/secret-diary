@@ -1,0 +1,23 @@
+<h2>Description</h2>
+
+<p>Everyone makes mistakes. This situation could also happen with the user. Imagine that they mistype a word in the input text and save it. After that, they realize the typo in the diary and do not want to leave it as is. The user should be able to remove the last note from the diary, and this is what you need to implement in this stage using an &quot;Undo&quot; button.</p>
+
+<p>This is not enough. What if the user accidentally taps the undo button after writing a really long text? To avoid such misclicks, an <code>AlertDialog</code> should appear that ask the user if they are sure in deleting the last note.</p>
+
+<h2>Objectives</h2>
+
+<p>1. Create a new <code>Button</code> with <code>id</code> attribute &quot;btnUndo&quot; and <code>text</code> set to &quot;Undo&quot;.<br />
+    2. On undo button click, an <code>AlertDialog</code> should be displayed with the following properties:</p>
+
+<ul>
+    <li><code>Title</code>: &quot;Remove last note&quot;</li>
+    <li><code>Message</code>: &quot;Do you really want to remove the last writing? This operation cannot be undone!&quot;</li>
+    <li><code>Positive Button</code>: &quot;Yes&quot;</li>
+    <li><code>Negative Button</code>: &quot;No&quot;</li>
+</ul>
+
+<p>3. If the user selects <code>Yes</code>, then perform the action, remove the last writing from the diary. Otherwise, nothing should happen.</p>
+
+<h2>Example</h2>
+
+<p><img alt="" height="509" name="Stage3Example.gif" src="https://ucarecdn.com/6f70585b-df68-4135-bbe2-3ddb167cc715/" width="286" /></p>

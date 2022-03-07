@@ -1,0 +1,14 @@
+# Ignore build files
+/.gradle
+/build
+
+# Ignore IntelliJ IDEA files
+/.idea
+*.iml
+
+# Ignore local files
+local.properties
+
+# Ignore plugin files
+#*.yaml
+#*.html
