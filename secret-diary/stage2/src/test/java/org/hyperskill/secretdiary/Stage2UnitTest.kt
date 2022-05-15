@@ -5,7 +5,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import junit.framework.Assert.*
+import org.junit.Assert.*
 import kotlinx.datetime.Clock
 import org.junit.Test
 import org.junit.runner.RunWith

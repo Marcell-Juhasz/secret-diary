@@ -1,26 +1,20 @@
 package org.hyperskill.secretdiary
 
 import android.content.Context
-import android.os.Looper
 import android.os.Looper.getMainLooper
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import junit.framework.Assert.*
 import kotlinx.datetime.Clock
+import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
-import org.robolectric.annotation.LooperMode
 import org.robolectric.shadows.ShadowAlertDialog
-import org.robolectric.shadows.ShadowLog
-import org.robolectric.shadows.ShadowLooper
 import java.text.SimpleDateFormat
-import java.time.Duration
 import java.util.*
 
 @RunWith(RobolectricTestRunner::class)
