@@ -1,5 +1,7 @@
-package org.hyperskill.android.secretdiary
+package org.hyperskill.secretdiary
 
+import android.content.Context
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -17,54 +19,66 @@ class Stage2UnitTest {
 
     private val activityController = Robolectric.buildActivity(MainActivity::class.java)
 
+    private val activity: MainActivity by lazy {
+        activityController.setup().get()
+    }
+
+    private val etNewWriting by lazy {
+        activity.find<EditText>("etNewWriting")
+    }
+
+    private val btnSave by lazy {
+        activity.find<Button>("btnSave")
+    }
+
+    private val tvDiary by lazy {
+        activity.find<TextView>("tvDiary")
+    }
+
+
     @Test
     fun testSas() {
 
     }
 
+    fun Context.identifier(id: String, `package`: String = packageName): Int {
+        return resources.getIdentifier(id, "id", `package`)
+    }
+
+    inline fun <reified T : View> MainActivity.find(id: String): T {
+
+        val maybeView: View? = findViewById(identifier(id))
+
+        val idNotFoundMessage = "View with id \"$id\" was not found"
+        val wrongClassMessage = "View with id \"$id\" is not from expected class. " +
+                "Expected ${T::class.java.simpleName} found ${maybeView?.javaClass?.simpleName}"
+
+        assertNotNull(idNotFoundMessage, maybeView)
+        assertTrue(wrongClassMessage, maybeView is T)
+        return maybeView as T
+    }
+
+
+
     @Test
-    fun testShouldCheckEditTextExist() {
-        val activity = activityController.setup().get()
-        val etNewWriting = activity.findViewById<EditText>(R.id.etNewWriting)
-
-        val messageEtNotExist = "Cannot find EditText with id \"etNewWriting\""
-        assertNotNull(messageEtNotExist, etNewWriting)
-
+    fun testShouldCheckEditText() {
         val messageEtWrongHint = "etNewWriting should have a hint property with \"Dear Diary...\" value"
         assertEquals(messageEtWrongHint, "Dear Diary...", etNewWriting.hint)
     }
 
     @Test
-    fun testShouldCheckButtonSaveExist() {
-        val activity = activityController.setup().get()
-        val btnSave = activity.findViewById<Button>(R.id.btnSave)
-
-        val messageBtnSaveNotExist = "Cannot find Button with id \"btnSave\""
-        assertNotNull(messageBtnSaveNotExist, btnSave)
-
+    fun testShouldCheckButtonSave() {
         val messageBtnSaveWrongText = "The text of btnSave should be \"Save\""
         assertEquals(messageBtnSaveWrongText, "Save", btnSave.text.toString())
     }
 
     @Test
-    fun testShouldCheckTextViewExist() {
-        val activity = activityController.setup().get()
-        val tvDiary = activity.findViewById<TextView>(R.id.tvDiary)
-
-        val messageTvNotExist = "Cannot find TextView with id \"tvDiary\""
-        assertNotNull(messageTvNotExist, tvDiary)
-
-        val messageTvWrongText = "Initially the text of tvDiary should be empty"
+    fun testShouldCheckTextView() {val messageTvWrongText = "Initially the text of tvDiary should be empty"
         assertTrue(messageTvWrongText, tvDiary.text.isEmpty())
     }
 
     @Test
     fun testShouldCheckSaving() {
-        val activity = activityController.setup().get()
-        val etNewWriting = activity.findViewById<EditText>(R.id.etNewWriting)
-        val btnSave = activity.findViewById<Button>(R.id.btnSave)
-        val tvDiary = activity.findViewById<TextView>(R.id.tvDiary)
-
         val sampleInputText1 = "This was an awesome day"
         etNewWriting.setText(sampleInputText1)
         val instant1 = Clock.System.now()

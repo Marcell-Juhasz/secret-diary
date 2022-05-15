@@ -1,9 +1,9 @@
-package org.hyperskill.android.secretdiary
+package org.hyperskill.secretdiary
 
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import org.hyperskill.android.secretdiary.databinding.ActivityMainBinding
+import org.hyperskill.secretdiary.databinding.ActivityMainBinding
 
 
 class MainActivity : AppCompatActivity() {

@@ -1,22 +1,18 @@
-package org.hyperskill.android.secretdiary
+package org.hyperskill.secretdiary
 
 import android.content.Context
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.view.View
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.datetime.Clock
 import org.hyperskill.android.secretdiary.data.Diary
 import org.hyperskill.android.secretdiary.data.Writing
-import org.hyperskill.android.secretdiary.databinding.ActivityMainBinding
+import org.hyperskill.secretdiary.databinding.ActivityMainBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
-// It is like the complete project without some exception:
-// -initDiaryFromSaved() function not used in onCreate() (commented)
-// -btnUndo visibility set to invisible
-// -no PIN Activity
+// "Undo" button + AlertDialog
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -60,11 +56,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun btnUndoOnClick() = fun(_: View) {
-        AlertDialog.Builder(this)
+        android.app.AlertDialog.Builder(this)
             .setTitle("Remove last note")
             .setMessage("Do you really want to remove the last writing? This operation cannot be undone!")
             .setPositiveButton("Yes") { dialog, which ->
                 diary.removeFirstOrNull()
+                print("HEEEEEEELLLLLLOOOOOO")
                 updateTvDiary()
                 dialog.dismiss()
             }

@@ -1,8 +1,10 @@
-package org.hyperskill.android.secretdiary
+package org.hyperskill.secretdiary
 
+import android.content.Context
 import android.os.Looper
 import android.os.Looper.getMainLooper
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -26,66 +28,78 @@ class Stage3UnitTest {
 
     private val activityController = Robolectric.buildActivity(MainActivity::class.java)
 
+    private val activity: MainActivity by lazy {
+        activityController.setup().get()
+    }
+
+    private val etNewWriting by lazy {
+        activity.find<EditText>("etNewWriting")
+    }
+
+    private val btnSave by lazy {
+        activity.find<Button>("btnSave")
+    }
+
+    private val tvDiary by lazy {
+        activity.find<TextView>("tvDiary")
+    }
+
+    private val btnUndo by lazy {
+        activity.find<Button>("btnUndo")
+    }
+
+
     @Test
     fun testSas() {
 
     }
 
+
+    fun Context.identifier(id: String, `package`: String = packageName): Int {
+        return resources.getIdentifier(id, "id", `package`)
+    }
+
+    inline fun <reified T : View> MainActivity.find(id: String): T {
+
+        val maybeView: View? = findViewById(identifier(id))
+
+        val idNotFoundMessage = "View with id \"$id\" was not found"
+        val wrongClassMessage = "View with id \"$id\" is not from expected class. " +
+                "Expected ${T::class.java.simpleName} found ${maybeView?.javaClass?.simpleName}"
+
+        assertNotNull(idNotFoundMessage, maybeView)
+        assertTrue(wrongClassMessage, maybeView is T)
+        return maybeView as T
+    }
+
+
     @Test
-    fun testShouldCheckEditTextExist() {
-        val activity = activityController.setup().get()
-        val etNewWriting = activity.findViewById<EditText>(R.id.etNewWriting)
-
-        val messageEtNotExist = "Cannot find EditText with id \"etNewWriting\""
-        assertNotNull(messageEtNotExist, etNewWriting)
-
+    fun testShouldCheckEditText() {
         val messageEtWrongHint =
             "etNewWriting should have a hint property with \"Dear Diary...\" value"
         assertEquals(messageEtWrongHint, "Dear Diary...", etNewWriting.hint)
     }
 
     @Test
-    fun testShouldCheckButtonSaveExist() {
-        val activity = activityController.setup().get()
-        val btnSave = activity.findViewById<Button>(R.id.btnSave)
-
-        val messageBtnSaveNotExist = "Cannot find Button with id \"btnSave\""
-        assertNotNull(messageBtnSaveNotExist, btnSave)
-
+    fun testShouldCheckButtonSave() {
         val messageBtnSaveWrongText = "The text of btnSave should be \"Save\""
         assertEquals(messageBtnSaveWrongText, "Save", btnSave.text.toString())
     }
 
     @Test
-    fun testShouldCheckTextViewExist() {
-        val activity = activityController.setup().get()
-        val tvDiary = activity.findViewById<TextView>(R.id.tvDiary)
-
-        val messageTvNotExist = "Cannot find TextView with id \"tvDiary\""
-        assertNotNull(messageTvNotExist, tvDiary)
-
+    fun testShouldCheckTextView() {
         val messageTvWrongText = "Initially the text of tvDiary should be empty"
         assertTrue(messageTvWrongText, tvDiary.text.isEmpty())
     }
 
     @Test
-    fun testShouldCheckButtonUndoExist() {
-        val activity = activityController.setup().get()
-        val btnUndo = activity.findViewById<Button>(R.id.btnUndo)
-
-        val messageBtnUndoNotExist = "Cannot find Button with id \"btnUndo\""
-        assertNotNull(messageBtnUndoNotExist, btnUndo)
-
+    fun testShouldCheckButtonUndo() {
         val messageBtnUndoWrongText = "The text of btnUndo should be \"Undo\""
         assertEquals(messageBtnUndoWrongText, "Undo", btnUndo.text.toString())
     }
 
     @Test
     fun testShouldCheckSavingAndUndo() {
-        val activity = activityController.setup().get()
-        val etNewWriting = activity.findViewById<EditText>(R.id.etNewWriting)
-        val btnSave = activity.findViewById<Button>(R.id.btnSave)
-        val tvDiary = activity.findViewById<TextView>(R.id.tvDiary)
 
         // First input
 
@@ -151,8 +165,6 @@ class Stage3UnitTest {
         // Until this, this test function is the same as in the previous stage
         // Now let's test the "Undo" button
 
-        val btnUndo = activity.findViewById<Button>(R.id.btnUndo)
-
         btnUndo.performClick()
 
         shadowOf(getMainLooper()).runToEndOfTasks()
@@ -202,5 +214,4 @@ class Stage3UnitTest {
             "The \"Undo\" button should not do anything if \"No\" selected on the AlertDialog"
         assertEquals(messageWrongOutput4, expectedOutput4, userOutput4)
     }
-
 }

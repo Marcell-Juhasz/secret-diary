@@ -1,49 +1,73 @@
-apply from: 'build-src/dependencies.gradle'
-
 buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.2'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${rootProject.properties["version.common.kotlin"]}"
-    }
+  apply plugin: 'hyperskill'
+
+  wrapper {
+    gradleVersion = hs.android.gradleVersion
+  }
+
+  def kotlinGradleVersion = hs.android.kotlinGradleVersion
+  def androidGradleVersion = hs.android.getAndroidGradleVersion(gradle.gradleVersion)
+
+  repositories {
+    google()
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+  }
+
+  dependencies {
+    classpath 'com.github.hyperskill:hs-gradle-plugin:release-SNAPSHOT'
+    classpath "com.android.tools.build:gradle:$androidGradleVersion"
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinGradleVersion"
+  }
+
+  configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+  }
 }
 
 allprojects {
-    repositories {
-        google()
-        mavenCentral()
-    }
+  apply plugin: 'hyperskill'
 
-    afterEvaluate {
-        if (extensions.findByName("android") != null) {
-            android {
-                testOptions {
-                    unitTests {
-                        includeAndroidResources = true
-                        all {
-                            afterTest { TestDescriptor test, TestResult result ->
-                                if (result.resultType == TestResult.ResultType.FAILURE) {
-                                    def message = result.exception?.message ?: "Wrong answer"
-                                    def lines = message.readLines()
-                                    println "#educational_plugin FAILED + " + lines[0]
-                                    lines.subList(1, lines.size()).forEach { line ->
-                                        println "#educational_plugin" + line
-                                    }
-                                    // we need this to separate output of different tests
-                                    println()
-                                }
-                            }
-                        }
-                    }
+  repositories {
+    google()
+    mavenCentral()
+  }
+
+  afterEvaluate {
+    if (extensions.findByName('android') != null) {
+      android {
+        testOptions {
+          unitTests {
+            includeAndroidResources = true
+            all {
+              afterTest { TestDescriptor test, TestResult result ->
+                if (result.resultType == TestResult.ResultType.FAILURE) {
+                  def message = result.exception?.message ?: "Wrong answer"
+                  def lines = message.readLines()
+                  println "#educational_plugin FAILED + " + lines[0]
+                  lines.subList(1, lines.size()).forEach { line ->
+                    println "#educational_plugin" + line
+                  }
+                  // we need this to separate output of different tests
+                  println()
                 }
+              }
             }
+          }
         }
-    }
-}
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+        defaultConfig {
+          testInstrumentationRunner 'com.edu.AndroidEduTestRunner'
+        }
+      }
+
+      dependencies {
+        def robolectric = hs.android.robolectricVersion
+        testImplementation "org.robolectric:robolectric:$robolectric"
+
+        def junit = hs.android.lib.junit
+        testImplementation "junit:junit:$junit"
+      }
+    }
+  }
 }
