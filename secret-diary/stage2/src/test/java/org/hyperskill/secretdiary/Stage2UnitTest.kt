@@ -39,6 +39,9 @@ class Stage2UnitTest {
         activity.find<TextView>("tvDiary")
     }
 
+    private val shadowLooper by lazy {
+        shadowOf(activity.mainLooper)
+    }
 
     @Test
     fun testSas() {
@@ -109,7 +112,7 @@ class Stage2UnitTest {
         val messageEtNotCleared = "EditText should be cleared after each saving"
         assertTrue(messageEtNotCleared, etNewWriting.text.isEmpty())
 
-        shadowOf(activity.mainLooper).idleFor(Duration.ofSeconds(300_000))
+        shadowLooper.idleFor(Duration.ofSeconds(300_000))
         // Second input
 
         val sampleInputText2 = "I had a date with my crush"

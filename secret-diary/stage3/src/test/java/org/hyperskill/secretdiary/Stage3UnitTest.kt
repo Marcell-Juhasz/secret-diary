@@ -46,6 +46,10 @@ class Stage3UnitTest {
         activity.find<Button>("btnUndo")
     }
 
+    private val shadowLooper by lazy {
+        shadowOf(activity.mainLooper)
+    }
+
 
     @Test
     fun testSas() {
@@ -165,7 +169,7 @@ class Stage3UnitTest {
 
         btnUndo.performClick()
 
-        shadowOf(getMainLooper()).runToEndOfTasks()
+        shadowLooper.runToEndOfTasks()
 
         ShadowAlertDialog.getLatestAlertDialog()
             .getButton(android.app.AlertDialog.BUTTON_POSITIVE)
@@ -173,7 +177,7 @@ class Stage3UnitTest {
 
         // After pressing the Undo button, the result should be the same as after the first save
 
-        shadowOf(getMainLooper()).runToEndOfTasks()
+        shadowLooper.runToEndOfTasks()
 
         val expectedOutput3 = expectedOutput1
         val userOutput3 = tvDiary.text.toString()
@@ -192,13 +196,13 @@ class Stage3UnitTest {
 
         btnUndo.performClick()
 
-        shadowOf(getMainLooper()).runToEndOfTasks()
+        shadowLooper.runToEndOfTasks()
 
         ShadowAlertDialog.getLatestAlertDialog()
             .getButton(android.app.AlertDialog.BUTTON_NEGATIVE)
             .performClick()
 
-        shadowOf(getMainLooper()).runToEndOfTasks()
+        shadowLooper.runToEndOfTasks()
 
         val expectedOutput4 = expectedOutput3
         val userOutput4 = tvDiary.text.toString()
