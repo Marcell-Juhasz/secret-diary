@@ -13,11 +13,15 @@ import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
+import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowAlertDialog
 import java.text.SimpleDateFormat
+import java.time.Duration
 import java.util.*
 
+
 @RunWith(RobolectricTestRunner::class)
+@Config(shadows = [CustomClockSystemShadow::class])
 class Stage3UnitTest {
 
     private val activityController = Robolectric.buildActivity(MainActivity::class.java)
@@ -127,7 +131,7 @@ class Stage3UnitTest {
         val messageEtNotCleared = "EditText should be cleared after each saving"
         assertTrue(messageEtNotCleared, etNewWriting.text.isEmpty())
 
-        Thread.sleep(3000) // wait 3 seconds, so the date/time value will change
+        shadowOf(getMainLooper()).idleFor(Duration.ofSeconds(300_000))
 
         // Second input
 

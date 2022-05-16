@@ -11,10 +11,14 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.Shadows.shadowOf
+import org.robolectric.annotation.Config
 import java.text.SimpleDateFormat
+import java.time.Duration
 import java.util.*
 
 @RunWith(RobolectricTestRunner::class)
+@Config(shadows = [CustomClockSystemShadow::class])
 class Stage2UnitTest {
 
     private val activityController = Robolectric.buildActivity(MainActivity::class.java)
@@ -38,7 +42,6 @@ class Stage2UnitTest {
 
     @Test
     fun testSas() {
-
     }
 
     fun Context.identifier(id: String, `package`: String = packageName): Int {
@@ -106,7 +109,7 @@ class Stage2UnitTest {
         val messageEtNotCleared = "EditText should be cleared after each saving"
         assertTrue(messageEtNotCleared, etNewWriting.text.isEmpty())
 
-        Thread.sleep(3000) // wait 3 seconds
+        shadowOf(activity.mainLooper).idleFor(Duration.ofSeconds(300_000))
         // Second input
 
         val sampleInputText2 = "I had a date with my crush"
@@ -132,5 +135,4 @@ class Stage2UnitTest {
         val messageWrongOutput2 = "The newer writing should be on the top, separated by an empty line from the older one"
         assertEquals(messageWrongOutput2, expectedOutput2, userOutput2)
     }
-
 }
