@@ -130,7 +130,7 @@ class Stage3UnitTest {
         val messageEtNotCleared = "EditText should be cleared after each saving"
         assertTrue(messageEtNotCleared, etNewWriting.text.isEmpty())
 
-        shadowOf(getMainLooper()).idleFor(Duration.ofSeconds(300_000))
+        shadowLooper.idleFor(Duration.ofSeconds(300_000))
 
         // Second input
 
