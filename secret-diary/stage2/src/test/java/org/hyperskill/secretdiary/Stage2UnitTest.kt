@@ -43,9 +43,6 @@ class Stage2UnitTest {
         shadowOf(activity.mainLooper)
     }
 
-    @Test
-    fun testSas() {
-    }
 
     fun Context.identifier(id: String, `package`: String = packageName): Int {
         return resources.getIdentifier(id, "id", `package`)
