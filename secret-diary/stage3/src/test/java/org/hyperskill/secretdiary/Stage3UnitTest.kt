@@ -1,29 +1,27 @@
 package org.hyperskill.secretdiary
 
 import android.content.Context
-import android.os.Looper
 import android.os.Looper.getMainLooper
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import junit.framework.Assert.*
 import kotlinx.datetime.Clock
+import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
-import org.robolectric.annotation.LooperMode
+import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowAlertDialog
-import org.robolectric.shadows.ShadowLog
-import org.robolectric.shadows.ShadowLooper
 import java.text.SimpleDateFormat
 import java.time.Duration
 import java.util.*
 
+
 @RunWith(RobolectricTestRunner::class)
+@Config(shadows = [CustomClockSystemShadow::class])
 class Stage3UnitTest {
 
     private val activityController = Robolectric.buildActivity(MainActivity::class.java)
@@ -48,11 +46,10 @@ class Stage3UnitTest {
         activity.find<Button>("btnUndo")
     }
 
-
-    @Test
-    fun testSas() {
-
+    private val shadowLooper by lazy {
+        shadowOf(activity.mainLooper)
     }
+
 
 
     fun Context.identifier(id: String, `package`: String = packageName): Int {
@@ -133,7 +130,7 @@ class Stage3UnitTest {
         val messageEtNotCleared = "EditText should be cleared after each saving"
         assertTrue(messageEtNotCleared, etNewWriting.text.isEmpty())
 
-        Thread.sleep(3000) // wait 3 seconds, so the date/time value will change
+        shadowLooper.idleFor(Duration.ofSeconds(300_000))
 
         // Second input
 
@@ -167,7 +164,7 @@ class Stage3UnitTest {
 
         btnUndo.performClick()
 
-        shadowOf(getMainLooper()).runToEndOfTasks()
+        shadowLooper.runToEndOfTasks()
 
         ShadowAlertDialog.getLatestAlertDialog()
             .getButton(android.app.AlertDialog.BUTTON_POSITIVE)
@@ -175,7 +172,7 @@ class Stage3UnitTest {
 
         // After pressing the Undo button, the result should be the same as after the first save
 
-        shadowOf(getMainLooper()).runToEndOfTasks()
+        shadowLooper.runToEndOfTasks()
 
         val expectedOutput3 = expectedOutput1
         val userOutput3 = tvDiary.text.toString()
@@ -194,13 +191,13 @@ class Stage3UnitTest {
 
         btnUndo.performClick()
 
-        shadowOf(getMainLooper()).runToEndOfTasks()
+        shadowLooper.runToEndOfTasks()
 
         ShadowAlertDialog.getLatestAlertDialog()
             .getButton(android.app.AlertDialog.BUTTON_NEGATIVE)
             .performClick()
 
-        shadowOf(getMainLooper()).runToEndOfTasks()
+        shadowLooper.runToEndOfTasks()
 
         val expectedOutput4 = expectedOutput3
         val userOutput4 = tvDiary.text.toString()

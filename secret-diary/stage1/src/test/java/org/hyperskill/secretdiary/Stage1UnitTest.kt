@@ -5,7 +5,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import junit.framework.Assert.*
+import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
@@ -32,10 +32,6 @@ class Stage1UnitTest {
         activity.find<TextView>("tvDiary")
     }
 
-    @Test
-    fun testSas() {
-
-    }
 
     fun Context.identifier(id: String, `package`: String = packageName): Int {
         return resources.getIdentifier(id, "id", `package`)
