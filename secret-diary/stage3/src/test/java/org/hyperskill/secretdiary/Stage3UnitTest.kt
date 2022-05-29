@@ -1,5 +1,6 @@
 package org.hyperskill.secretdiary
 
+import android.app.Activity
 import android.content.Context
 import android.os.Looper.getMainLooper
 import android.view.View
@@ -26,7 +27,7 @@ class Stage3UnitTest {
 
     private val activityController = Robolectric.buildActivity(MainActivity::class.java)
 
-    private val activity: MainActivity by lazy {
+    private val activity: Activity by lazy {
         activityController.setup().get()
     }
 
@@ -52,11 +53,12 @@ class Stage3UnitTest {
 
 
 
+
     fun Context.identifier(id: String, `package`: String = packageName): Int {
         return resources.getIdentifier(id, "id", `package`)
     }
 
-    inline fun <reified T : View> MainActivity.find(id: String): T {
+    inline fun <reified T : View> Activity.find(id: String): T {
 
         val maybeView: View? = findViewById(identifier(id))
 
@@ -105,7 +107,7 @@ class Stage3UnitTest {
         val instant1 = Clock.System.now()
         val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
         val dateText1 = simpleDateFormat.format(instant1.toEpochMilliseconds())
-        btnSave.performClick()
+        btnSave.clickAndRun()
 
         val expectedOutput1 = """
             $dateText1
@@ -138,7 +140,7 @@ class Stage3UnitTest {
         etNewWriting.setText(sampleInputText2)
         val instant2 = Clock.System.now()
         val dateText2 = simpleDateFormat.format(instant2.toEpochMilliseconds())
-        btnSave.performClick()
+        btnSave.clickAndRun()
 
         val expectedOutput2 = """
             $dateText2
@@ -162,17 +164,13 @@ class Stage3UnitTest {
         // Until this, this test function is the same as in the previous stage
         // Now let's test the "Undo" button
 
-        btnUndo.performClick()
-
-        shadowLooper.runToEndOfTasks()
+        btnUndo.clickAndRun()
 
         ShadowAlertDialog.getLatestAlertDialog()
             .getButton(android.app.AlertDialog.BUTTON_POSITIVE)
-            .performClick()
+            .clickAndRun()
 
         // After pressing the Undo button, the result should be the same as after the first save
-
-        shadowLooper.runToEndOfTasks()
 
         val expectedOutput3 = expectedOutput1
         val userOutput3 = tvDiary.text.toString()
@@ -188,16 +186,11 @@ class Stage3UnitTest {
         assertEquals(messageWrongOutput3, expectedOutput3, userOutput3)
 
 
-
-        btnUndo.performClick()
-
-        shadowLooper.runToEndOfTasks()
+        btnUndo.clickAndRun()
 
         ShadowAlertDialog.getLatestAlertDialog()
             .getButton(android.app.AlertDialog.BUTTON_NEGATIVE)
-            .performClick()
-
-        shadowLooper.runToEndOfTasks()
+            .clickAndRun()
 
         val expectedOutput4 = expectedOutput3
         val userOutput4 = tvDiary.text.toString()
@@ -210,5 +203,11 @@ class Stage3UnitTest {
         val messageWrongOutput4 =
             "The \"Undo\" button should not do anything if \"No\" selected on the AlertDialog"
         assertEquals(messageWrongOutput4, expectedOutput4, userOutput4)
+    }
+
+
+    private fun View.clickAndRun(millis: Long = 500){
+        this.performClick()
+        shadowLooper.idleFor(Duration.ofMillis(millis))
     }
 }

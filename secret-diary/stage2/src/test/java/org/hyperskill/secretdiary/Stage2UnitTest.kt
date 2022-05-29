@@ -1,5 +1,6 @@
 package org.hyperskill.secretdiary
 
+import android.app.Activity
 import android.content.Context
 import android.view.View
 import android.widget.Button
@@ -23,7 +24,7 @@ class Stage2UnitTest {
 
     private val activityController = Robolectric.buildActivity(MainActivity::class.java)
 
-    private val activity: MainActivity by lazy {
+    private val activity: Activity by lazy {
         activityController.setup().get()
     }
 
@@ -48,7 +49,7 @@ class Stage2UnitTest {
         return resources.getIdentifier(id, "id", `package`)
     }
 
-    inline fun <reified T : View> MainActivity.find(id: String): T {
+    inline fun <reified T : View> Activity.find(id: String): T {
 
         val maybeView: View? = findViewById(identifier(id))
 
@@ -87,7 +88,7 @@ class Stage2UnitTest {
         val instant1 = Clock.System.now()
         val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
         val dateText1 = simpleDateFormat.format(instant1.toEpochMilliseconds())
-        btnSave.performClick()
+        btnSave.clickAndRun()
 
         val expectedOutput1 = """
             $dateText1
@@ -116,7 +117,7 @@ class Stage2UnitTest {
         etNewWriting.setText(sampleInputText2)
         val instant2 = Clock.System.now()
         val dateText2 = simpleDateFormat.format(instant2.toEpochMilliseconds())
-        btnSave.performClick()
+        btnSave.clickAndRun()
 
         val expectedOutput2 = """
             $dateText2
@@ -135,4 +136,11 @@ class Stage2UnitTest {
         val messageWrongOutput2 = "The newer writing should be on the top, separated by an empty line from the older one"
         assertEquals(messageWrongOutput2, expectedOutput2, userOutput2)
     }
+
+
+    private fun View.clickAndRun(millis: Long = 500){
+        this.performClick()
+        shadowLooper.idleFor(Duration.ofMillis(millis))
+    }
+
 }

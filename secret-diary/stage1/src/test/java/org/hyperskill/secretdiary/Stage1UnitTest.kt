@@ -1,5 +1,6 @@
 package org.hyperskill.secretdiary
 
+import android.app.Activity
 import android.content.Context
 import android.view.View
 import android.widget.Button
@@ -16,7 +17,7 @@ class Stage1UnitTest {
 
     private val activityController = Robolectric.buildActivity(MainActivity::class.java)
 
-    private val activity: MainActivity by lazy {
+    private val activity: Activity by lazy {
         activityController.setup().get()
     }
 
@@ -38,7 +39,7 @@ class Stage1UnitTest {
     }
 
     // using this "find()" method instead of "findViewById() prevents build failure if the id does not exist"
-    inline fun <reified T : View> MainActivity.find(id: String): T {
+    inline fun <reified T : View> Activity.find(id: String): T {
 
         val maybeView: View? = findViewById(identifier(id))
 
@@ -92,4 +93,6 @@ class Stage1UnitTest {
             "By clicking on the Save button, the writing should overwrite the text of tvDiary"
         assertEquals(messageDiaryNotOverwritten, sampleInputText2, tvDiary.text.toString())
     }
+
+
 }
