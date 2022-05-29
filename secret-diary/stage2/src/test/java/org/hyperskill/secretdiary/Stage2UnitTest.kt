@@ -1,18 +1,16 @@
 package org.hyperskill.secretdiary
 
-import android.app.Activity
 import android.content.Context
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import org.junit.Assert.*
 import kotlinx.datetime.Clock
+import org.hyperskill.secretdiary.internals.AbstractUnitTest
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.Shadows.shadowOf
 import org.robolectric.annotation.Config
 import java.text.SimpleDateFormat
 import java.time.Duration
@@ -20,48 +18,24 @@ import java.util.*
 
 @RunWith(RobolectricTestRunner::class)
 @Config(shadows = [CustomClockSystemShadow::class])
-class Stage2UnitTest {
-
-    private val activityController = Robolectric.buildActivity(MainActivity::class.java)
-
-    private val activity: Activity by lazy {
-        activityController.setup().get()
-    }
+class Stage2UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) {
 
     private val etNewWriting by lazy {
-        activity.find<EditText>("etNewWriting")
+        activity.findViewByString<EditText>("etNewWriting")
     }
 
     private val btnSave by lazy {
-        activity.find<Button>("btnSave")
+        activity.findViewByString<Button>("btnSave")
     }
 
     private val tvDiary by lazy {
-        activity.find<TextView>("tvDiary")
-    }
-
-    private val shadowLooper by lazy {
-        shadowOf(activity.mainLooper)
+        activity.findViewByString<TextView>("tvDiary")
     }
 
 
     fun Context.identifier(id: String, `package`: String = packageName): Int {
         return resources.getIdentifier(id, "id", `package`)
     }
-
-    inline fun <reified T : View> Activity.find(id: String): T {
-
-        val maybeView: View? = findViewById(identifier(id))
-
-        val idNotFoundMessage = "View with id \"$id\" was not found"
-        val wrongClassMessage = "View with id \"$id\" is not from expected class. " +
-                "Expected ${T::class.java.simpleName} found ${maybeView?.javaClass?.simpleName}"
-
-        assertNotNull(idNotFoundMessage, maybeView)
-        assertTrue(wrongClassMessage, maybeView is T)
-        return maybeView as T
-    }
-
 
 
     @Test
@@ -135,12 +109,6 @@ class Stage2UnitTest {
 
         val messageWrongOutput2 = "The newer writing should be on the top, separated by an empty line from the older one"
         assertEquals(messageWrongOutput2, expectedOutput2, userOutput2)
-    }
-
-
-    private fun View.clickAndRun(millis: Long = 500){
-        this.performClick()
-        shadowLooper.idleFor(Duration.ofMillis(millis))
     }
 
 }

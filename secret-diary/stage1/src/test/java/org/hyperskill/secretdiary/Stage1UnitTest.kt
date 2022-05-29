@@ -1,55 +1,34 @@
 package org.hyperskill.secretdiary
 
-import android.app.Activity
 import android.content.Context
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import org.junit.Assert.*
+import org.hyperskill.secretdiary.internals.AbstractUnitTest
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
-class Stage1UnitTest {
-
-    private val activityController = Robolectric.buildActivity(MainActivity::class.java)
-
-    private val activity: Activity by lazy {
-        activityController.setup().get()
-    }
+class Stage1UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) {
 
     private val etNewWriting by lazy {
-        activity.find<EditText>("etNewWriting")
+        activity.findViewByString<EditText>("etNewWriting")
     }
 
     private val btnSave by lazy {
-        activity.find<Button>("btnSave")
+        activity.findViewByString<Button>("btnSave")
     }
 
     private val tvDiary by lazy {
-        activity.find<TextView>("tvDiary")
+        activity.findViewByString<TextView>("tvDiary")
     }
 
 
     fun Context.identifier(id: String, `package`: String = packageName): Int {
         return resources.getIdentifier(id, "id", `package`)
-    }
-
-    // using this "find()" method instead of "findViewById() prevents build failure if the id does not exist"
-    inline fun <reified T : View> Activity.find(id: String): T {
-
-        val maybeView: View? = findViewById(identifier(id))
-
-        val idNotFoundMessage = "View with id \"$id\" was not found"
-        val wrongClassMessage = "View with id \"$id\" is not from expected class. " +
-                "Expected ${T::class.java.simpleName} found ${maybeView?.javaClass?.simpleName}"
-
-        assertNotNull(idNotFoundMessage, maybeView)
-        assertTrue(wrongClassMessage, maybeView is T)
-        return maybeView as T
     }
 
 

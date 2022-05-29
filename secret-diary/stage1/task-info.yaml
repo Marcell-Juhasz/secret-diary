@@ -24,3 +24,5 @@ files:
   visible: false
 - name: src/main/java/org/hyperskill/secretdiary/MainActivity.kt
   visible: true
+- name: src/test/java/org/hyperskill/secretdiary/internals/AbstractUnitTest.kt
+  visible: false
