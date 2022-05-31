@@ -15,62 +15,87 @@ import org.robolectric.RobolectricTestRunner
 class Stage1UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) {
 
     private val etNewWriting by lazy {
-        activity.findViewByString<EditText>("etNewWriting")
+        val etNewWriting = activity.findViewByString<EditText>("etNewWriting")
+
+        val messageEtWrongHint =
+            "etNewWriting should have a hint property with \"Dear Diary...\" value"
+        assertEquals(messageEtWrongHint, "Dear Diary...", etNewWriting.hint)
+
+        etNewWriting
     }
 
     private val btnSave by lazy {
-        activity.findViewByString<Button>("btnSave")
+        val btnSave = activity.findViewByString<Button>("btnSave")
+
+        val messageBtnSaveWrongText = "The text of btnSave should be \"Save\""
+        assertEquals(messageBtnSaveWrongText, "Save", btnSave.text.toString())
+
+        btnSave
     }
 
     private val tvDiary by lazy {
-        activity.findViewByString<TextView>("tvDiary")
-    }
+        val tvDiary = activity.findViewByString<TextView>("tvDiary")
 
+        val messageTvWrongText = "Initially the text of tvDiary should be empty"
+        assertTrue(messageTvWrongText, tvDiary.text.isEmpty())
 
-    fun Context.identifier(id: String, `package`: String = packageName): Int {
-        return resources.getIdentifier(id, "id", `package`)
+        tvDiary
     }
 
 
     @Test
     fun testShouldCheckEditText() {
-        val messageEtWrongHint =
-            "etNewWriting should have a hint property with \"Dear Diary...\" value"
-        assertEquals(messageEtWrongHint, "Dear Diary...", etNewWriting.hint)
+        testActivity {
+            etNewWriting
+        }
     }
 
     @Test
     fun testShouldCheckButtonSave() {
-        val messageBtnSaveWrongText = "The text of btnSave should be \"Save\""
-        assertEquals(messageBtnSaveWrongText, "Save", btnSave.text.toString())
+        testActivity {
+            btnSave
+        }
     }
 
     @Test
     fun testShouldCheckTextView() {
-        val messageTvWrongText = "Initially the text of tvDiary should be empty"
-        assertTrue(messageTvWrongText, tvDiary.text.isEmpty())
+        testActivity {
+            tvDiary
+        }
     }
 
     @Test
     fun testShouldCheckSaving() {
-        val sampleInputText = "This was an awesome day"
-        etNewWriting.setText(sampleInputText)
-        btnSave.performClick()
+        testActivity {
+            // ensure all views used on test are initialized with initial state
+            etNewWriting
+            btnSave
+            tvDiary
+            //
 
-        val messageWritingNotSaved =
-            "By clicking on the Save button, the writing should appear on tvDiary"
-        assertEquals(messageWritingNotSaved, sampleInputText, tvDiary.text.toString())
+            // First input
 
-        val messageEtNotCleared = "EditText should be cleared after each saving"
-        assertTrue(messageEtNotCleared, etNewWriting.text.isEmpty())
+            val sampleInputText = "This was an awesome day"
+            etNewWriting.setText(sampleInputText)
+            btnSave.performClick()
 
-        val sampleInputText2 = "I had a date with my crush"
-        etNewWriting.setText(sampleInputText2)
-        btnSave.performClick()
+            val messageWritingNotSaved =
+                "By clicking on the Save button, the writing should appear on tvDiary"
+            assertEquals(messageWritingNotSaved, sampleInputText, tvDiary.text.toString())
 
-        val messageDiaryNotOverwritten =
-            "By clicking on the Save button, the writing should overwrite the text of tvDiary"
-        assertEquals(messageDiaryNotOverwritten, sampleInputText2, tvDiary.text.toString())
+            val messageEtNotCleared = "EditText should be cleared after each saving"
+            assertTrue(messageEtNotCleared, etNewWriting.text.isEmpty())
+
+            // Second input
+
+            val sampleInputText2 = "I had a date with my crush"
+            etNewWriting.setText(sampleInputText2)
+            btnSave.performClick()
+
+            val messageDiaryNotOverwritten =
+                "By clicking on the Save button, the writing should overwrite the text of tvDiary"
+            assertEquals(messageDiaryNotOverwritten, sampleInputText2, tvDiary.text.toString())
+        }
     }
 
 

@@ -63,7 +63,6 @@ class Stage3UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) 
         testActivity {
             etNewWriting
         }
-
     }
 
     @Test
@@ -71,7 +70,6 @@ class Stage3UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) 
         testActivity {
             btnSave
         }
-
     }
 
     @Test
@@ -79,7 +77,6 @@ class Stage3UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) 
         testActivity {
             tvDiary
         }
-
     }
 
     @Test
