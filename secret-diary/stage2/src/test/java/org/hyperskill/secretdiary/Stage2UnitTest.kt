@@ -12,6 +12,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import org.robolectric.shadows.ShadowToast
 import java.text.SimpleDateFormat
 import java.time.Duration
 import java.util.*
@@ -138,6 +139,43 @@ class Stage2UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) 
             val messageWrongOutput2 =
                 "The newer writing should be on the top, separated by an empty line from the older one"
             assertEquals(messageWrongOutput2, expectedOutput2, userOutput2)
+        }
+    }
+
+    @Test
+    fun testShouldCheckSavingBlank() {
+        testActivity {
+            // ensure all views used on test are initialized with initial state
+            etNewWriting
+            btnSave
+            tvDiary
+            //
+
+            val sampleInputText1 = "First input"
+            etNewWriting.setText(sampleInputText1)
+            btnSave.performClick()
+
+            val sampleInputText2 = "Second input"
+            etNewWriting.setText(sampleInputText2)
+            btnSave.performClick()
+
+            val diaryTextBeforeSaveBlank = tvDiary.text
+
+            val inputBlankString = """
+                  
+                          
+            """.trimIndent()
+            etNewWriting.setText(inputBlankString)
+            btnSave.clickAndRun()
+
+            val userToastText = ShadowToast.getTextOfLatestToast()
+            val savingBlankToastText = "Empty or blank input cannot be saved"
+            val messageWrongToastText = "When trying to save an empty or blank string, the appropriate Toast message should be shown"
+            assertEquals(messageWrongToastText, savingBlankToastText, userToastText)
+
+            val diaryTextAfterSaveBlank = tvDiary.text
+            val messageWrongInputFormat = "Do not save blank text!"
+            assertEquals(messageWrongInputFormat, diaryTextBeforeSaveBlank, diaryTextAfterSaveBlank)
         }
     }
 

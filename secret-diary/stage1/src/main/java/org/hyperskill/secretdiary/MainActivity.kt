@@ -2,6 +2,7 @@ package org.hyperskill.secretdiary
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import org.hyperskill.secretdiary.databinding.ActivityMainBinding
 
@@ -19,7 +20,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun btnSaveOnClick() = fun(_: View) {
-        binding.tvDiary.text = binding.etNewWriting.text.toString()
-        binding.etNewWriting.text.clear()
+        val userInput = binding.etNewWriting.text.toString()
+        if (userInput.isNotBlank()) {
+            binding.tvDiary.text = userInput
+            binding.etNewWriting.text.clear()
+        } else {
+            Toast.makeText(this, "Empty or blank input cannot be saved", Toast.LENGTH_SHORT).show()
+        }
     }
 }

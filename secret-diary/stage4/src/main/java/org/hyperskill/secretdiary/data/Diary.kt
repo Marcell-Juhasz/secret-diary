@@ -8,11 +8,13 @@ class Diary() : MutableList<Writing> by mutableListOf() {
     }
 
     fun initFromText(rawText: String) {
-        val rawList = rawText.split("\n\n")
-        rawList.forEach {
-            val date = it.substringBefore("\n")
-            val text = it.substringAfter("\n")
-            this.add(Writing(date, text))
+        if (rawText.isNotBlank()) {
+            val rawList = rawText.split("\n\n")
+            rawList.forEach {
+                val date = it.substringBefore("\n")
+                val text = it.substringAfter("\n")
+                this.add(Writing(date, text))
+            }
         }
     }
 }

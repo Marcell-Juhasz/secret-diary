@@ -1,6 +1,5 @@
 package org.hyperskill.secretdiary
 
-import android.content.Context
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -10,6 +9,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.shadows.ShadowToast
 
 @RunWith(RobolectricTestRunner::class)
 class Stage1UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) {
@@ -64,6 +64,7 @@ class Stage1UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) 
         }
     }
 
+
     @Test
     fun testShouldCheckSaving() {
         testActivity {
@@ -98,5 +99,41 @@ class Stage1UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) 
         }
     }
 
+    @Test
+    fun testShouldCheckSavingBlank() {
+        testActivity {
+            // ensure all views used on test are initialized with initial state
+            etNewWriting
+            btnSave
+            tvDiary
+            //
+
+            val sampleInputText1 = "First input"
+            etNewWriting.setText(sampleInputText1)
+            btnSave.performClick()
+
+            val sampleInputText2 = "Second input"
+            etNewWriting.setText(sampleInputText2)
+            btnSave.performClick()
+
+            val diaryTextBeforeSaveBlank = tvDiary.text
+
+            val inputBlankString = """
+                  
+                          
+            """.trimIndent()
+            etNewWriting.setText(inputBlankString)
+            btnSave.clickAndRun()
+
+            val userToastText = ShadowToast.getTextOfLatestToast()
+            val savingBlankToastText = "Empty or blank input cannot be saved"
+            val messageWrongToastText = "When trying to save an empty or blank string, the appropriate Toast message should be shown"
+            assertEquals(messageWrongToastText, savingBlankToastText, userToastText)
+
+            val diaryTextAfterSaveBlank = tvDiary.text
+            val messageWrongInputFormat = "Do not save blank text!"
+            assertEquals(messageWrongInputFormat, diaryTextBeforeSaveBlank, diaryTextAfterSaveBlank)
+        }
+    }
 
 }

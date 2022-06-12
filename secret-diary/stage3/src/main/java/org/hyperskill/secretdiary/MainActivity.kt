@@ -4,10 +4,11 @@ import android.content.Context
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.datetime.Clock
-import org.hyperskill.android.secretdiary.data.Diary
-import org.hyperskill.android.secretdiary.data.Writing
+import org.hyperskill.secretdiary.data.Diary
+import org.hyperskill.secretdiary.data.Writing
 import org.hyperskill.secretdiary.databinding.ActivityMainBinding
 import java.text.SimpleDateFormat
 import java.util.*
@@ -46,13 +47,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun btnSaveOnClick() = fun(_: View) {
-        val instant = Clock.System.now()
-        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-        diary.add(0,
-            Writing(simpleDateFormat.format(instant.toEpochMilliseconds()),
-                binding.etNewWriting.text.toString()))
-        binding.tvDiary.text = diary.toString()
-        binding.etNewWriting.text.clear()
+        val userInput = binding.etNewWriting.text.toString()
+        if (userInput.isNotBlank()) {
+            val instant = Clock.System.now()
+            val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+            diary.add(
+                0,
+                Writing(
+                    simpleDateFormat.format(instant.toEpochMilliseconds()),
+                    userInput
+                )
+            )
+            binding.tvDiary.text = diary.toString()
+            binding.etNewWriting.text.clear()
+        } else {
+            Toast.makeText(this, "Empty or blank input cannot be saved", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun btnUndoOnClick() = fun(_: View) {
@@ -61,7 +71,6 @@ class MainActivity : AppCompatActivity() {
             .setMessage("Do you really want to remove the last writing? This operation cannot be undone!")
             .setPositiveButton("Yes") { dialog, which ->
                 diary.removeFirstOrNull()
-                print("HEEEEEEELLLLLLOOOOOO")
                 updateTvDiary()
                 dialog.dismiss()
             }

@@ -1,4 +1,4 @@
-package org.hyperskill.android.secretdiary.data
+package org.hyperskill.secretdiary.data
 
 data class Writing(
     val date: String,

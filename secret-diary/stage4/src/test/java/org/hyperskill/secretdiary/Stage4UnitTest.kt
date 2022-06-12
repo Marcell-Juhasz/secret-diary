@@ -1,8 +1,10 @@
 package org.hyperskill.secretdiary
 
+import android.app.Activity
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.test.core.app.ActivityScenario
 import kotlinx.datetime.Clock
 import org.hyperskill.secretdiary.internals.AbstractUnitTest
 import org.junit.Assert.assertEquals
@@ -17,10 +19,9 @@ import java.text.SimpleDateFormat
 import java.time.Duration
 import java.util.*
 
-
 @RunWith(RobolectricTestRunner::class)
 @Config(shadows = [CustomClockSystemShadow::class])
-class Stage3UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) {
+class Stage4UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) {
 
     private val etNewWriting by lazy {
         val etNewWriting = activity.findViewByString<EditText>("etNewWriting")
@@ -43,9 +44,6 @@ class Stage3UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) 
 
     private val tvDiary by lazy {
         val tvDiary = activity.findViewByString<TextView>("tvDiary")
-
-        val messageTvWrongText = "Initially the text of tvDiary should be empty"
-        assertTrue(messageTvWrongText, tvDiary.text.isEmpty())
 
         tvDiary
     }
@@ -210,7 +208,6 @@ class Stage3UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) 
             etNewWriting
             btnSave
             tvDiary
-            btnUndo
             //
 
             val sampleInputText1 = "First input"
@@ -232,7 +229,8 @@ class Stage3UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) 
 
             val userToastText = ShadowToast.getTextOfLatestToast()
             val savingBlankToastText = "Empty or blank input cannot be saved"
-            val messageWrongToastText = "When trying to save an empty or blank string, the appropriate Toast message should be shown"
+            val messageWrongToastText =
+                "When trying to save an empty or blank string, the appropriate Toast message should be shown"
             assertEquals(messageWrongToastText, savingBlankToastText, userToastText)
 
             val diaryTextAfterSaveBlank = tvDiary.text
@@ -257,5 +255,54 @@ class Stage3UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) 
             btnUndo.performClick()
         }
     }
+
+    /*@Test
+    fun testShouldCheckPersistence() {
+        testActivity {
+            // ensure all views used on test are initialized with initial state
+            etNewWriting
+            btnSave
+            tvDiary
+            btnUndo
+            //
+
+            // First input
+
+            val sampleInputText1 = "This was an awesome day"
+            etNewWriting.setText(sampleInputText1)
+            val instant1 = Clock.System.now()
+            val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+            val dateText1 = simpleDateFormat.format(instant1.toEpochMilliseconds())
+            btnSave.clickAndRun()
+
+            val diaryText1 = """
+            $dateText1
+            $sampleInputText1
+        """.trimIndent()
+
+            shadowLooper.idleFor(Duration.ofSeconds(300_000))
+
+            // Second input
+
+            val sampleInputText2 = "I had a date with my crush"
+            etNewWriting.setText(sampleInputText2)
+            val instant2 = Clock.System.now()
+            val dateText2 = simpleDateFormat.format(instant2.toEpochMilliseconds())
+            btnSave.clickAndRun()
+
+            val diaryText2 = """
+            $dateText2
+            $sampleInputText2
+            
+            $dateText1
+            $sampleInputText1
+        """.trimIndent()
+
+            //activityController.restart()
+            //ActivityScenario<Activity>()
+
+            TODO("CONTINUE")
+        }
+    }*/
 
 }

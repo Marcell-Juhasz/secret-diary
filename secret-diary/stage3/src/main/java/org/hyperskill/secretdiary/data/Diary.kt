@@ -1,6 +1,4 @@
-package org.hyperskill.android.secretdiary.data
-
-import kotlinx.datetime.toLocalDateTime
+package org.hyperskill.secretdiary.data
 
 class Diary() : MutableList<Writing> by mutableListOf() {
     override fun toString(): String = joinToString("\n\n")
