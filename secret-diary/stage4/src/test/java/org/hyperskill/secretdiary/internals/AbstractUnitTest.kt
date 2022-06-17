@@ -18,7 +18,7 @@ abstract class AbstractUnitTest<T : Activity>(clazz: Class<T>) {
     /**
      * Setup and control activities and their lifecycle
      */
-    protected val activityController: ActivityController<T> by lazy {
+    protected var activityController: ActivityController<T> by lazy {
         Robolectric.buildActivity(clazz)
     }
 

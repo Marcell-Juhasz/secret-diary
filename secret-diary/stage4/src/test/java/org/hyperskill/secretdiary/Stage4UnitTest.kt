@@ -1,6 +1,8 @@
 package org.hyperskill.secretdiary
 
 import android.app.Activity
+import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -11,10 +13,13 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowAlertDialog
+import org.robolectric.shadows.ShadowLog
 import org.robolectric.shadows.ShadowToast
+import org.robolectric.util.Logger
 import java.text.SimpleDateFormat
 import java.time.Duration
 import java.util.*
@@ -256,7 +261,7 @@ class Stage4UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) 
         }
     }
 
-    /*@Test
+    @Test
     fun testShouldCheckPersistence() {
         testActivity {
             // ensure all views used on test are initialized with initial state
@@ -298,11 +303,21 @@ class Stage4UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) 
             $sampleInputText1
         """.trimIndent()
 
-            //activityController.restart()
-            //ActivityScenario<Activity>()
 
-            TODO("CONTINUE")
+            // print("\n------------------\n${tvDiary.text}\n------------------\n")
+
+
+            val bundle = Bundle() // maybe it is not important for the project
+            activityController.pause().stop().destroy() // shutting down the activity
+            tvDiary.text = "" // clearing the text of the diary
+            activityController = // creating a new activity by calling the methods in the sequence as the Android OS would do it
+                Robolectric.buildActivity(MainActivity::class.java).create().postCreate(bundle)
+                    .start().resume().postResume().visible()
+
+
+            // print("${tvDiary.text}\n------------------\n")
+
         }
-    }*/
+    }
 
 }
