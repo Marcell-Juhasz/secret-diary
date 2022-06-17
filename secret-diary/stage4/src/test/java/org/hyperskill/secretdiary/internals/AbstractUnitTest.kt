@@ -2,6 +2,7 @@ package org.hyperskill.secretdiary.internals
 
 import android.app.Activity
 import android.content.Intent
+import android.os.Bundle
 import android.view.View
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
@@ -18,7 +19,7 @@ abstract class AbstractUnitTest<T : Activity>(clazz: Class<T>) {
     /**
      * Setup and control activities and their lifecycle
      */
-    protected var activityController: ActivityController<T> by lazy {
+    val activityController: ActivityController<T> by lazy {
         Robolectric.buildActivity(clazz)
     }
 
@@ -27,7 +28,7 @@ abstract class AbstractUnitTest<T : Activity>(clazz: Class<T>) {
      *
      * It is the @RealObject of the shadowActivity
      */
-    protected val activity : Activity by lazy {
+    val activity : Activity by lazy {
         activityController.get()
     }
 
@@ -39,7 +40,7 @@ abstract class AbstractUnitTest<T : Activity>(clazz: Class<T>) {
      * If you don't know what shadows are you can have a better understanding on that reading this
      * on roboletric documentation: http://robolectric.org/extending/
      */
-    protected val shadowActivity: ShadowActivity by lazy {
+    val shadowActivity: ShadowActivity by lazy {
         Shadow.extract(activity)
     }
 
@@ -48,7 +49,7 @@ abstract class AbstractUnitTest<T : Activity>(clazz: Class<T>) {
      *
      * Usually used with .idleFor(someDurationValue) or .runToEndOfTasks()
      */
-    protected val shadowLooper: ShadowLooper by lazy {
+    val shadowLooper: ShadowLooper by lazy {
         shadowOf(activity.mainLooper)
     }
 
@@ -58,10 +59,10 @@ abstract class AbstractUnitTest<T : Activity>(clazz: Class<T>) {
      *
      * returns a value for convenience use, like in tests that involve navigation between Activities
      */
-    fun <ReturnValue> testActivity(arguments: Intent = Intent(), testCodeBlock: (Activity) -> ReturnValue): ReturnValue {
+    fun <ReturnValue> testActivity(arguments: Intent = Intent(), savedInstanceState: Bundle = Bundle(), testCodeBlock: (Activity) -> ReturnValue): ReturnValue {
         try {
             activity.intent =  arguments
-            activityController.setup()
+            activityController.setup(savedInstanceState)
         } catch (ex: Exception) {
             throw AssertionError("Exception, test failed on activity creation with $ex\n${ex.stackTraceToString()}")
         }
@@ -118,7 +119,7 @@ abstract class AbstractUnitTest<T : Activity>(clazz: Class<T>) {
      *
      * Internally it calls performClick() and shadowLooper.idleFor(millis)
      */
-    protected fun View.clickAndRun(millis: Long = 500){
+    fun View.clickAndRun(millis: Long = 500){
         this.performClick()
         shadowLooper.idleFor(Duration.ofMillis(millis))
     }

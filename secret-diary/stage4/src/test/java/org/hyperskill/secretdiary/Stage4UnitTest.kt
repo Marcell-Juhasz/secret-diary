@@ -1,25 +1,22 @@
 package org.hyperskill.secretdiary
 
-import android.app.Activity
+import android.content.Context.MODE_PRIVATE
+import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import androidx.test.core.app.ActivityScenario
 import kotlinx.datetime.Clock
 import org.hyperskill.secretdiary.internals.AbstractUnitTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowAlertDialog
-import org.robolectric.shadows.ShadowLog
 import org.robolectric.shadows.ShadowToast
-import org.robolectric.util.Logger
 import java.text.SimpleDateFormat
 import java.time.Duration
 import java.util.*
@@ -27,6 +24,11 @@ import java.util.*
 @RunWith(RobolectricTestRunner::class)
 @Config(shadows = [CustomClockSystemShadow::class])
 class Stage4UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) {
+
+    companion object {
+        const val PREF_DIARY = "PREF_DIARY"
+        const val KEY_DIARY_TEXT = "KEY_DIARY_TEXT"
+    }
 
     private val etNewWriting by lazy {
         val etNewWriting = activity.findViewByString<EditText>("etNewWriting")
@@ -60,6 +62,12 @@ class Stage4UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) 
         assertEquals(messageBtnUndoWrongText, "Undo", btnUndo.text.toString())
 
         btnUndo
+    }
+
+    private val sharedPreferences: SharedPreferences by lazy {
+        RuntimeEnvironment.getApplication().getSharedPreferences(
+            PREF_DIARY, MODE_PRIVATE
+        )
     }
 
     @Test
@@ -262,7 +270,8 @@ class Stage4UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) 
     }
 
     @Test
-    fun testShouldCheckPersistence() {
+    fun testShouldCheckSave() {
+
         testActivity {
             // ensure all views used on test are initialized with initial state
             etNewWriting
@@ -303,20 +312,106 @@ class Stage4UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) 
             $sampleInputText1
         """.trimIndent()
 
+            sharedPreferences
 
-            // print("\n------------------\n${tvDiary.text}\n------------------\n")
+            val actualPersistedValue = sharedPreferences.getString(KEY_DIARY_TEXT, "null")
+            assertEquals("some error message", diaryText2, actualPersistedValue)
+        }
+    }
 
+    @Test
+    fun testShouldCheckRestore() {
 
-            val bundle = Bundle() // maybe it is not important for the project
-            activityController.pause().stop().destroy() // shutting down the activity
-            tvDiary.text = "" // clearing the text of the diary
-            activityController = // creating a new activity by calling the methods in the sequence as the Android OS would do it
-                Robolectric.buildActivity(MainActivity::class.java).create().postCreate(bundle)
-                    .start().resume().postResume().visible()
+        sharedPreferences.edit().putString(KEY_DIARY_TEXT, "some content").commit()
 
+        testActivity {
 
-            // print("${tvDiary.text}\n------------------\n")
+            tvDiary
 
+            val actualRestoredValue = tvDiary.text.toString().lowercase()
+            assertEquals("Some error message!", "expected", actualRestoredValue)
+        }
+    }
+
+    @Test
+    fun testShouldCheckPersistAndRestoreWithLifecycle() {
+        // I don't think this is really necessary, you can test persist and restore separately, but if you prefer this way it is possible
+
+        testActivity {
+            // ensure all views used on test are initialized with initial state
+            etNewWriting
+            btnSave
+            tvDiary
+            btnUndo
+            //
+
+            // First input
+
+            val sampleInputText1 = "This was an awesome day"
+            etNewWriting.setText(sampleInputText1)
+            val instant1 = Clock.System.now()
+            val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+            val dateText1 = simpleDateFormat.format(instant1.toEpochMilliseconds())
+            btnSave.clickAndRun()
+
+            val diaryText1 = """
+            $dateText1
+            $sampleInputText1
+        """.trimIndent()
+
+            shadowLooper.idleFor(Duration.ofSeconds(300_000))
+
+            // Second input
+
+            val sampleInputText2 = "I had a date with my crush"
+            etNewWriting.setText(sampleInputText2)
+            val instant2 = Clock.System.now()
+            val dateText2 = simpleDateFormat.format(instant2.toEpochMilliseconds())
+            btnSave.clickAndRun()
+
+            val diaryText2 = """
+            $dateText2
+            $sampleInputText2
+            
+            $dateText1
+            $sampleInputText1
+        """.trimIndent()
+
+            sharedPreferences
+
+            val actualPersistedValue = sharedPreferences.getString(KEY_DIARY_TEXT, "null")
+            assertEquals("some error message", diaryText2, actualPersistedValue)
+        }
+
+        val bundle: Bundle = Bundle()
+        activityController.saveInstanceState(bundle)
+            .pause()
+            .stop()
+            .destroy()
+
+        // instantiate an anonymous AbstractUnitTest
+        val recreateActivityUnitTest = object : AbstractUnitTest<MainActivity>(MainActivity::class.java){}
+
+        // set the state to be restored
+        val sharedPreferences = recreateActivityUnitTest.activity.application.getSharedPreferences(
+            PREF_DIARY, MODE_PRIVATE
+        )
+
+        //do the testing
+        recreateActivityUnitTest.testActivity(savedInstanceState = bundle) {
+
+            // I have changed the member of AbstractUnitTest to public so it is possible to have access to its members
+            // I did this change some days ago on the template too, so you can make everything public on AbstractUnitClass for all stages to follow along (files with same name should have same content across stages)
+            recreateActivityUnitTest.activityController
+            recreateActivityUnitTest.activity
+
+            // be careful the original activity is destroyed, you have use recreateActivity.thePropertyYouWant
+            // also the old views are gone, find what you are going to use again
+
+            val tvDiary = recreateActivityUnitTest.activity.findViewByString<TextView>("tvDiary")
+
+            val actualRestoredValue = tvDiary.text.toString().lowercase()
+            assertEquals("Some error message!", "wrong value expected", actualRestoredValue)
         }
     }
 

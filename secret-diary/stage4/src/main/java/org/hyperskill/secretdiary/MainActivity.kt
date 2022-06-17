@@ -59,6 +59,7 @@ class MainActivity : AppCompatActivity() {
             )
             binding.tvDiary.text = diary.toString()
             binding.etNewWriting.text.clear()
+            persistDiary()
         } else {
             Toast.makeText(this, "Empty or blank input cannot be saved", Toast.LENGTH_SHORT).show()
         }
@@ -72,6 +73,7 @@ class MainActivity : AppCompatActivity() {
                 diary.removeFirstOrNull()
                 updateTvDiary()
                 dialog.dismiss()
+                persistDiary()
             }
             .setNegativeButton("No") { dialog, which ->
                 dialog.dismiss()
@@ -84,12 +86,16 @@ class MainActivity : AppCompatActivity() {
         binding.tvDiary.text = diary.toString()
     }
 
-
-    override fun onStop() {
-        super.onStop()
+    private fun persistDiary() {
         val sp = getSharedPreferences(PREF_DIARY, Context.MODE_PRIVATE)
         val editor = sp.edit()
         editor.putString(KEY_DIARY_TEXT, diary.toString())
         editor.apply()
+    }
+
+
+    override fun onStop() {
+        persistDiary()
+        super.onStop()
     }
 }
