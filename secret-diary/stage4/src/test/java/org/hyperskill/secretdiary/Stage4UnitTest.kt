@@ -337,7 +337,7 @@ class Stage4UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) 
     fun testShouldCheckPersistAndRestoreWithLifecycle() {
         // I don't think this is really necessary, you can test persist and restore separately, but if you prefer this way it is possible
 
-        testActivity {
+        val returnedValue = testActivity {
             // ensure all views used on test are initialized with initial state
             etNewWriting
             btnSave
@@ -381,10 +381,13 @@ class Stage4UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) 
 
             val actualPersistedValue = sharedPreferences.getString(KEY_DIARY_TEXT, "null")
             assertEquals("some error message", diaryText2, actualPersistedValue)
+
+            //return the value
+            actualPersistedValue
         }
 
-        val bundle: Bundle = Bundle()
-        activityController.saveInstanceState(bundle)
+
+        activityController
             .pause()
             .stop()
             .destroy()
@@ -396,9 +399,10 @@ class Stage4UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) 
         val sharedPreferences = recreateActivityUnitTest.activity.application.getSharedPreferences(
             PREF_DIARY, MODE_PRIVATE
         )
+        sharedPreferences.edit().putString(KEY_DIARY_TEXT, returnedValue).commit()
 
         //do the testing
-        recreateActivityUnitTest.testActivity(savedInstanceState = bundle) {
+        recreateActivityUnitTest.testActivity(/*savedInstanceState = bundle*/) {
 
             // I have changed the member of AbstractUnitTest to public so it is possible to have access to its members
             // I did this change some days ago on the template too, so you can make everything public on AbstractUnitClass for all stages to follow along (files with same name should have same content across stages)
