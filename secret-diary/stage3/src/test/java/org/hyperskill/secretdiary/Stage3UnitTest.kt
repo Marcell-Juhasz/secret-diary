@@ -161,11 +161,7 @@ class Stage3UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) 
             // Until this, this test function is the same as in the previous stage
             // Now let's test the "Undo" button
 
-            btnUndo.clickAndRun()
-
-            ShadowAlertDialog.getLatestAlertDialog()
-                .getButton(android.app.AlertDialog.BUTTON_POSITIVE)
-                .clickAndRun()
+            performUndoAndYesClick()
 
             // After pressing the Undo button, the result should be the same as after the first save
 
@@ -184,7 +180,6 @@ class Stage3UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) 
 
 
             btnUndo.clickAndRun()
-
             ShadowAlertDialog.getLatestAlertDialog()
                 .getButton(android.app.AlertDialog.BUTTON_NEGATIVE)
                 .clickAndRun()
@@ -256,6 +251,14 @@ class Stage3UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) 
             btnUndo.performClick()
             btnUndo.performClick()
         }
+    }
+
+    fun performUndoAndYesClick() {
+        btnUndo.clickAndRun()
+
+        ShadowAlertDialog.getLatestAlertDialog()
+            .getButton(android.app.AlertDialog.BUTTON_POSITIVE)
+            .clickAndRun()
     }
 
 }

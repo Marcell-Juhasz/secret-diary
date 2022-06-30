@@ -2,7 +2,6 @@ package org.hyperskill.secretdiary
 
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
-import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -172,11 +171,7 @@ class Stage4UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) 
             // Until this, this test function is the same as in the previous stage
             // Now let's test the "Undo" button
 
-            btnUndo.clickAndRun()
-
-            ShadowAlertDialog.getLatestAlertDialog()
-                .getButton(android.app.AlertDialog.BUTTON_POSITIVE)
-                .clickAndRun()
+            performUndoAndYesClick()
 
             // After pressing the Undo button, the result should be the same as after the first save
 
@@ -264,8 +259,8 @@ class Stage4UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) 
 
             tvDiary.text = ""
 
-            btnUndo.performClick()
-            btnUndo.performClick()
+            performUndoAndYesClick()
+            performUndoAndYesClick()
         }
     }
 
@@ -315,25 +310,86 @@ class Stage4UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) 
             sharedPreferences
 
             val actualPersistedValue = sharedPreferences.getString(KEY_DIARY_TEXT, "null")
-            assertEquals("some error message", diaryText2, actualPersistedValue)
+            val messagePersistenceNotWorking =
+                "\"Save\" button should store the text of the diary in SharedPreferences"
+            assertEquals(messagePersistenceNotWorking, diaryText2, actualPersistedValue)
         }
     }
 
     @Test
-    fun testShouldCheckRestore() {
+    fun testShouldCheckRestoreAndButtons() {
 
-        sharedPreferences.edit().putString(KEY_DIARY_TEXT, "some content").commit()
+        val sampleInputText1 = "This was an awesome day"
+        val instant1 = Clock.System.now()
+        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        val dateText1 = simpleDateFormat.format(instant1.toEpochMilliseconds())
+
+        shadowLooper.idleFor(Duration.ofSeconds(200_000))
+
+        val sampleInputText2 = "I had a date with my crush"
+        val instant2 = Clock.System.now()
+        val dateText2 = simpleDateFormat.format(instant2.toEpochMilliseconds())
+
+        val persistedText = """
+            $dateText2
+            $sampleInputText2
+            
+            $dateText1
+            $sampleInputText1
+        """.trimIndent()
+
+        sharedPreferences.edit().putString(KEY_DIARY_TEXT, persistedText).commit()
+
 
         testActivity {
 
             tvDiary
 
-            val actualRestoredValue = tvDiary.text.toString().lowercase()
-            assertEquals("Some error message!", "expected", actualRestoredValue)
+            val actualRestoredValue = tvDiary.text.toString()//.lowercase()
+            val messagePersistenceNotWorking =
+                "Saved text should be restored into the diary on Activity start"
+            assertEquals(messagePersistenceNotWorking, persistedText, actualRestoredValue)
+
+
+            // Text after performing an Undo operation on the restored diary
+            val diaryText1 = """
+            $dateText1
+            $sampleInputText1
+        """.trimIndent()
+
+            performUndoAndYesClick()
+
+            val diaryAfterUndo = tvDiary.text.toString()
+            val messageUndoNotWorking = "\"Undo\" button should also work for the restored text"
+            assertEquals(messageUndoNotWorking, diaryText1, diaryAfterUndo)
+
+
+            // Add a new writing
+            val sampleInputText3 = "I was sunbathing on the beach"
+            etNewWriting.setText(sampleInputText3)
+            val instant3 = Clock.System.now()
+            val dateText3 = simpleDateFormat.format(instant3.toEpochMilliseconds())
+
+            btnSave.clickAndRun(3000)
+
+            val diaryText3 = """
+            $dateText3
+            $sampleInputText3
+            
+            $dateText1
+            $sampleInputText1
+        """.trimIndent()
+
+
+            val diaryAfterSave = tvDiary.text.toString()
+            val messageSaveNotWorking = "\"Save\" button should also work for the restored text"
+            assertEquals(messageSaveNotWorking, diaryText3, diaryAfterSave)
         }
     }
 
-    @Test
+
+    // I will delete this if we don't need
+    /*@Test
     fun testShouldCheckPersistAndRestoreWithLifecycle() {
         // I don't think this is really necessary, you can test persist and restore separately, but if you prefer this way it is possible
 
@@ -393,7 +449,8 @@ class Stage4UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) 
             .destroy()
 
         // instantiate an anonymous AbstractUnitTest
-        val recreateActivityUnitTest = object : AbstractUnitTest<MainActivity>(MainActivity::class.java){}
+        val recreateActivityUnitTest =
+            object : AbstractUnitTest<MainActivity>(MainActivity::class.java) {}
 
         // set the state to be restored
         val sharedPreferences = recreateActivityUnitTest.activity.application.getSharedPreferences(
@@ -417,6 +474,14 @@ class Stage4UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) 
             val actualRestoredValue = tvDiary.text.toString().lowercase()
             assertEquals("Some error message!", "wrong value expected", actualRestoredValue)
         }
+    }*/
+
+    private fun performUndoAndYesClick() {
+        btnUndo.clickAndRun()
+
+        ShadowAlertDialog.getLatestAlertDialog()
+            .getButton(android.app.AlertDialog.BUTTON_POSITIVE)
+            .clickAndRun()
     }
 
 }
