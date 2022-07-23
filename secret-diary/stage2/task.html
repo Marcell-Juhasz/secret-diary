@@ -10,6 +10,17 @@
     <li>Each note should be separated by an empty line.</li>
 </ul>
 
+<p>
+    Obs: The passage of time will be emulated on tests.
+    There are several time related apis in java/kotlin/android environment,
+    but tests time emulation won't guarantee to be compatible with all of them.
+</p>
+
+<p>
+    You can use <code>Clock.System.now()</code>
+    which will be guaranteed to be compatible with tests time emulation.
+</p>
+
 <h2>Example</h2>
 
 <p><img alt="" height="577" name="Stage2Example.gif" src="https://ucarecdn.com/da023d16-8b2c-495c-8643-c24f8e5cbe4c/" width="324"></p>
