@@ -109,7 +109,6 @@ class Stage4UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) 
             //
 
             // First input
-
             val sampleInputText1 = "This was an awesome day"
             etNewWriting.setText(sampleInputText1)
             val instant1 = Clock.System.now()
@@ -143,7 +142,6 @@ class Stage4UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) 
             shadowLooper.idleFor(Duration.ofSeconds(300_000))
 
             // Second input
-
             val sampleInputText2 = "I had a date with my crush"
             etNewWriting.setText(sampleInputText2)
             val instant2 = Clock.System.now()
@@ -169,13 +167,11 @@ class Stage4UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) 
                 "The newer writing should be on the top, separated by an empty line from the older one"
             assertEquals(messageWrongOutput2, expectedOutput2, userOutput2)
 
-            // Until this, this test function is the same as in the previous stage
-            // Now let's test the "Undo" button
 
+            // Now let's test the "Undo" button
             performUndoAndYesClick()
 
             // After pressing the Undo button, the result should be the same as after the first save
-
             val expectedOutput3 = expectedOutput1
             val userOutput3 = tvDiary.text.toString()
 
@@ -190,11 +186,7 @@ class Stage4UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) 
             assertEquals(messageWrongOutput3, expectedOutput3, userOutput3)
 
 
-            btnUndo.clickAndRun()
-
-            ShadowAlertDialog.getLatestAlertDialog()
-                .getButton(android.app.AlertDialog.BUTTON_NEGATIVE)
-                .clickAndRun()
+            performUndoAndNoClick()
 
             val expectedOutput4 = expectedOutput3
             val userOutput4 = tvDiary.text.toString()
@@ -258,10 +250,38 @@ class Stage4UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) 
             btnUndo
             //
 
-            tvDiary.text = ""
+            performUndoAndYesClick()
+            performUndoAndYesClick()
+
+
+            val sampleInputText1 = "Didn't break app"
+            etNewWriting.setText(sampleInputText1)
+            val instant1 = Clock.System.now()
+            val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+            val dateText1 = simpleDateFormat.format(instant1.toEpochMilliseconds())
+            btnSave.clickAndRun()
+
+            val diaryText1 = """
+            $dateText1
+            $sampleInputText1
+        """.trimIndent()
+
+            val actualText = tvDiary.text.toString()
+
+            assertEquals(
+                "It should be possible to save after clicking btnUndo with blank tvDiary",
+                diaryText1,
+                actualText
+            )
 
             performUndoAndYesClick()
             performUndoAndYesClick()
+
+            assertEquals(
+                "Clicking btnUndo with blank tvDiary should keep tvDiary blank",
+                diaryText1,
+                actualText
+            )
         }
     }
 
@@ -277,7 +297,6 @@ class Stage4UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) 
             //
 
             // First input
-
             val sampleInputText1 = "This was an awesome day"
             etNewWriting.setText(sampleInputText1)
             val instant1 = Clock.System.now()
@@ -290,10 +309,14 @@ class Stage4UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) 
             $sampleInputText1
         """.trimIndent()
 
+            val actualPersistedValue1 = sharedPreferences.getString(KEY_DIARY_TEXT, "null")
+            val messagePersistenceNotWorking =
+                "\"Save\" button should store the text of the diary in SharedPreferences"
+            assertEquals(messagePersistenceNotWorking, diaryText1, actualPersistedValue1)
+
             shadowLooper.idleFor(Duration.ofSeconds(300_000))
 
             // Second input
-
             val sampleInputText2 = "I had a date with my crush"
             etNewWriting.setText(sampleInputText2)
             val instant2 = Clock.System.now()
@@ -308,12 +331,8 @@ class Stage4UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) 
             $sampleInputText1
         """.trimIndent()
 
-            sharedPreferences
-
-            val actualPersistedValue = sharedPreferences.getString(KEY_DIARY_TEXT, "null")
-            val messagePersistenceNotWorking =
-                "\"Save\" button should store the text of the diary in SharedPreferences"
-            assertEquals(messagePersistenceNotWorking, diaryText2, actualPersistedValue)
+            val actualPersistedValue2 = sharedPreferences.getString(KEY_DIARY_TEXT, "null")
+            assertEquals(messagePersistenceNotWorking, diaryText2, actualPersistedValue2)
         }
     }
 
@@ -394,6 +413,14 @@ class Stage4UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) 
 
         ShadowAlertDialog.getLatestAlertDialog()
             .getButton(android.app.AlertDialog.BUTTON_POSITIVE)
+            .clickAndRun()
+    }
+
+    private fun performUndoAndNoClick() {
+        btnUndo.clickAndRun()
+
+        ShadowAlertDialog.getLatestAlertDialog()
+            .getButton(android.app.AlertDialog.BUTTON_NEGATIVE)
             .clickAndRun()
     }
 }
