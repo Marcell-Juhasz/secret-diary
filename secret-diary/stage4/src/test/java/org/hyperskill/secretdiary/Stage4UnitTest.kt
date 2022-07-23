@@ -19,7 +19,7 @@ import org.robolectric.shadows.ShadowAlertDialog
 import org.robolectric.shadows.ShadowToast
 import java.text.SimpleDateFormat
 import java.time.Duration
-import java.util.*
+import java.util.Locale
 
 @RunWith(RobolectricTestRunner::class)
 @Config(shadows = [CustomClockSystemShadow::class])
@@ -389,94 +389,6 @@ class Stage4UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) 
     }
 
 
-    // I will delete this if we don't need
-    /*@Test
-    fun testShouldCheckPersistAndRestoreWithLifecycle() {
-        // I don't think this is really necessary, you can test persist and restore separately, but if you prefer this way it is possible
-
-        val returnedValue = testActivity {
-            // ensure all views used on test are initialized with initial state
-            etNewWriting
-            btnSave
-            tvDiary
-            btnUndo
-            //
-
-            // First input
-
-            val sampleInputText1 = "This was an awesome day"
-            etNewWriting.setText(sampleInputText1)
-            val instant1 = Clock.System.now()
-            val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-            val dateText1 = simpleDateFormat.format(instant1.toEpochMilliseconds())
-            btnSave.clickAndRun()
-
-            val diaryText1 = """
-            $dateText1
-            $sampleInputText1
-        """.trimIndent()
-
-            shadowLooper.idleFor(Duration.ofSeconds(300_000))
-
-            // Second input
-
-            val sampleInputText2 = "I had a date with my crush"
-            etNewWriting.setText(sampleInputText2)
-            val instant2 = Clock.System.now()
-            val dateText2 = simpleDateFormat.format(instant2.toEpochMilliseconds())
-            btnSave.clickAndRun()
-
-            val diaryText2 = """
-            $dateText2
-            $sampleInputText2
-            
-            $dateText1
-            $sampleInputText1
-        """.trimIndent()
-
-            sharedPreferences
-
-            val actualPersistedValue = sharedPreferences.getString(KEY_DIARY_TEXT, "null")
-            assertEquals("some error message", diaryText2, actualPersistedValue)
-
-            //return the value
-            actualPersistedValue
-        }
-
-
-        activityController
-            .pause()
-            .stop()
-            .destroy()
-
-        // instantiate an anonymous AbstractUnitTest
-        val recreateActivityUnitTest =
-            object : AbstractUnitTest<MainActivity>(MainActivity::class.java) {}
-
-        // set the state to be restored
-        val sharedPreferences = recreateActivityUnitTest.activity.application.getSharedPreferences(
-            PREF_DIARY, MODE_PRIVATE
-        )
-        sharedPreferences.edit().putString(KEY_DIARY_TEXT, returnedValue).commit()
-
-        //do the testing
-        recreateActivityUnitTest.testActivity(/*savedInstanceState = bundle*/) {
-
-            // I have changed the member of AbstractUnitTest to public so it is possible to have access to its members
-            // I did this change some days ago on the template too, so you can make everything public on AbstractUnitClass for all stages to follow along (files with same name should have same content across stages)
-            recreateActivityUnitTest.activityController
-            recreateActivityUnitTest.activity
-
-            // be careful the original activity is destroyed, you have use recreateActivity.thePropertyYouWant
-            // also the old views are gone, find what you are going to use again
-
-            val tvDiary = recreateActivityUnitTest.activity.findViewByString<TextView>("tvDiary")
-
-            val actualRestoredValue = tvDiary.text.toString().lowercase()
-            assertEquals("Some error message!", "wrong value expected", actualRestoredValue)
-        }
-    }*/
-
     private fun performUndoAndYesClick() {
         btnUndo.clickAndRun()
 
@@ -484,5 +396,4 @@ class Stage4UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) 
             .getButton(android.app.AlertDialog.BUTTON_POSITIVE)
             .clickAndRun()
     }
-
 }

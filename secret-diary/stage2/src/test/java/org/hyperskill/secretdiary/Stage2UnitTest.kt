@@ -15,7 +15,8 @@ import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowToast
 import java.text.SimpleDateFormat
 import java.time.Duration
-import java.util.*
+import java.util.Locale
+
 
 @RunWith(RobolectricTestRunner::class)
 @Config(shadows = [CustomClockSystemShadow::class])
