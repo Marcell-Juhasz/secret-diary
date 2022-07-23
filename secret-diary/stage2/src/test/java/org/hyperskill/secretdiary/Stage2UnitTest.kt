@@ -1,11 +1,11 @@
 package org.hyperskill.secretdiary
 
-import android.content.Context
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import kotlinx.datetime.Clock
 import org.hyperskill.secretdiary.internals.AbstractUnitTest
+import org.hyperskill.secretdiary.internals.CustomClockSystemShadow
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test

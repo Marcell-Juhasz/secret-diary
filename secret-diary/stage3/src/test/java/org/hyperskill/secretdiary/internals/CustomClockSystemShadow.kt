@@ -1,4 +1,4 @@
-package org.hyperskill.secretdiary
+package org.hyperskill.secretdiary.internals
 
 import android.os.SystemClock
 import kotlinx.datetime.Clock
