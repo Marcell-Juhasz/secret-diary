@@ -29,7 +29,6 @@ class Stage1UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) 
 
         val messageBtnSaveWrongText = "The text of btnSave should be \"Save\""
         assertEquals(messageBtnSaveWrongText, "Save", btnSave.text.toString())
-
         btnSave
     }
 

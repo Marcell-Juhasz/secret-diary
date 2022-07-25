@@ -5,6 +5,7 @@ import android.widget.EditText
 import android.widget.TextView
 import kotlinx.datetime.Clock
 import org.hyperskill.secretdiary.internals.AbstractUnitTest
+import org.hyperskill.secretdiary.internals.CustomClockSystemShadow
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -15,7 +16,7 @@ import org.robolectric.shadows.ShadowAlertDialog
 import org.robolectric.shadows.ShadowToast
 import java.text.SimpleDateFormat
 import java.time.Duration
-import java.util.*
+import java.util.Locale
 
 
 @RunWith(RobolectricTestRunner::class)
@@ -253,12 +254,11 @@ class Stage3UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) 
         }
     }
 
-    fun performUndoAndYesClick() {
+    private fun performUndoAndYesClick() {
         btnUndo.clickAndRun()
 
         ShadowAlertDialog.getLatestAlertDialog()
             .getButton(android.app.AlertDialog.BUTTON_POSITIVE)
             .clickAndRun()
     }
-
 }

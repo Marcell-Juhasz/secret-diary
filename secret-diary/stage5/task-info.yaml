@@ -22,11 +22,13 @@ files:
   visible: true
 - name: src/test/java/org/hyperskill/secretdiary/Stage5UnitTest.kt
   visible: false
+- name: src/test/java/org/hyperskill/secretdiary/Stage4UnitTest.kt
+  visible: false
 - name: src/main/java/org/hyperskill/secretdiary/MainActivity.kt
   visible: true
 - name: src/main/java/org/hyperskill/secretdiary/data/Writing.kt
   visible: true
 - name: src/main/java/org/hyperskill/secretdiary/data/Diary.kt
   visible: true
-- name: src/test/java/org/hyperskill/secretdiary/CustomClockSystemShadow.kt
+- name: src/test/java/org/hyperskill/secretdiary/internals/CustomClockSystemShadow.kt
   visible: false
