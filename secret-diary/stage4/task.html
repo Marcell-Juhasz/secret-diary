@@ -1,15 +1,17 @@
 <h2>Description</h2>
 
-<p>We have created a nice diary so far. The user can add as many notes as they want, and remove the last one. But the application should also be able to persistently save the data, and that is what you have to implement in that stage.<span style="color:#64b0f4"> </span>When the application is being closed, all the diary text should be saved including the date and time notations. When the user launches the application, they should see the diary exactly as before it was closed. Also,&nbsp; <code>Save</code> and <code>Undo</code> buttons should work as before.</p>
+<p>You have created a lovely diary so far. Users can add as many notes as they want and remove the last one. The application, however, should also be able to save the data; that is what you must implement in this stage.<span style="color: #64b0f4;"> </span>When the application is closed by users, all the diary text data should be saved, including the date and time notations. Users should see the diary precisely as it was when they restart the application. The <code>Save</code> and <code>Undo</code> buttons should work as before.</p>
 
 <h2>Objectives</h2>
 
 <ol>
-    <li>&nbsp;Save the diary persistently into <code>SharedPreferences</code> with name&nbsp;<code>PREF_DIARY</code> and key&nbsp;<code>KEY_DIARY_TEXT</code> to survive the application closes. The diary should be saved after each Save and Undo action.</li>
-    <li>&nbsp;When the user launches the app, the saved diary should be loaded automatically.</li>
-    <li>&nbsp;The two buttons should work like in the previous stage, also for the notes loaded from persistent storage.</li>
+    <li>Save the diary into <code>SharedPreferences</code> with the name <code>PREF_DIARY</code> and the key <code>KEY_DIARY_TEXT</code> to display it once the application closes. Save the diary after each <code>Save</code> and <code>Undo</code> action;</li>
+    <li>When the user restarts the app, load the saved diary automatically;</li>
+    <li>The two buttons should work like in the previous stage; the same applies to the notes loaded from the storage.</li>
 </ol>
 
 <h2>Example</h2>
 
-<p><img alt="" height="551" name="Stage4Example.gif" src="https://ucarecdn.com/7d2c04de-284e-4176-8497-31110d5dd511/" width="310" /></p>
+<p><strong>Example 1</strong>:</p>
+
+<p><img alt="" height="551" name="Stage4Example.gif" src="https://ucarecdn.com/7d2c04de-284e-4176-8497-31110d5dd511/" width="310"></p>
