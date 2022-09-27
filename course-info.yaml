@@ -1,8 +1,8 @@
 type: hyperskill
-title: Secret Diary
+title: Hyperskill lesson 769691
 language: English
-summary: A password-protected diary application for writing down your personal thougths
+summary: Hyperskill lesson 769691
 programming_language: Kotlin
 environment: Android
 content:
-- secret-diary
+- Secret Diary

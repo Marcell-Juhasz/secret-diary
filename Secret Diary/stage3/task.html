@@ -1,0 +1,32 @@
+<h2>Description</h2>
+
+<p>Everyone makes mistakes. Users can mistype a word in the input text and save it. After that, they can realize they made a typo in the diary and fix it. In this stage, you need to implement the <code>Undo</code> button.</p>
+
+<p>It is not enough. What if users accidentally click the undo button after composing a long entry? To avoid such misclicks, an <code>AlertDialog</code> should appear that ask the user if they are sure about deleting the last note.</p>
+
+<h2>Objectives</h2>
+
+<ol>
+
+  <li> Create a new <code>Button</code> with the <code>id</code> attribute of <code>btnUndo</code> and <code>text</code> set to <code>Undo</code></li>
+
+  <li> When users click on the <code>Undo</code> button, display an <code>AlertDialog</code> with the following properties:
+    <ul>
+      <li><code>Title</code>: <code>Remove last note</code></li>
+      <li><code>Message</code>: <code>Do you really want to remove the last writing? This operation cannot be undone!</code></li>
+      <li><code>Positive Button</code>: <code>Yes</code></li>
+      <li><code>Negative Button</code>: <code>No</code></li>
+      <li>When importing <code>AlertDialog</code> make sure to import <code>android.app.AlertDialog</code></li>
+    </ul>
+  </li>
+
+  <li> If a user selects <code>Yes</code>, remove the last note from the diary. Otherwise, do nothing</li>
+
+  <li> If a user selects <code>Yes</code> on the <code>AlertDialog</code> but the diary is empty, do nothing</li>
+</ol>
+
+<h2>Example</h2>
+
+<p><strong>Example 1</strong>:</p>
+
+<p><img alt="" height="509" name="Stage3Example.gif" src="https://ucarecdn.com/6f70585b-df68-4135-bbe2-3ddb167cc715/" width="286"></p>
