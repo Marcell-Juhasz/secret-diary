@@ -1,0 +1,28 @@
+<h2>Description</h2>
+
+<p>The diary is ready to use; well done! Since our diary keeps our secrets tight, we don't want others to access and read it. The last step is to protect the diary with a password known only to the user.</p>
+
+<p>For this, create a new <code>Activity</code> for the PIN that is shown when the application launches. If the user correctly enters the secret number and taps the <code>Log In</code> button, they can access the diary and work with it like in the previous stage. If the PIN is incorrect, let the user know by showing the error message.</p>
+
+<h2>Objectives</h2>
+
+<ol>
+  <li>
+    Create the new <code>Activity</code> named <code>LoginActivity</code> with the following components and set it to be the launcher activity:
+    <ul>
+      <li>A <code>TextView</code> with <code>id</code> of <code>tvTitle</code> and <code>text</code> <code>Secret Diary</code></li>
+      <li>An <code>EditText</code> with <code>id</code> attribute set to <code>etPin</code> that only accepts the numeric input. Also, a <code>hint</code> <code>Enter PIN</code> should inform the user about the role of the input field</li>
+      <li>A <code>Button</code> with the <code>btnLogin</code> <code>id</code> and the <code>Log In</code> <code>text</code> property</li>
+    </ul>
+  </li>
+
+<li>If the user presses the <code>Log In</code> button, and the entered PIN is correct (the default PIN used in tests: <code>1234</code>), launch the diary Activity you implemented in the previous stages. Otherwise, set the <code>error</code> property of the input text field to <code>Wrong PIN!</code></li>
+</ol>
+
+<p>Obs: Tests assume the existence of LoginActivity class. Build will fail if that class has not been created yet.</p>
+
+<h2>Example</h2>
+
+<p><strong>Example 1</strong>:</p>
+
+<p><img alt="" height="566" name="Stage5Example.gif" src="https://ucarecdn.com/a2795943-6c32-4c4e-8f9d-7306657f02c8/" width="318"></p>
