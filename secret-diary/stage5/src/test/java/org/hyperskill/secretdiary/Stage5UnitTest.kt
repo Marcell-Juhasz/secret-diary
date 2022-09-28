@@ -1,5 +1,6 @@
 package org.hyperskill.secretdiary
 
+import android.content.Intent
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -142,6 +143,26 @@ class Stage5UnitTest : AbstractUnitTest<LoginActivity>(LoginActivity::class.java
         }
     }
 
+
+    @Test
+    fun testLoginActivityFinished() {
+        testActivity {
+            tvTitle
+            etPin
+            btnLogin
+
+            etPin.setText("1234")
+            btnLogin.clickAndRun()
+
+            val messageActivityNotFinishing =
+                "Login Activity should be destroyed on successful login action"
+            val userIntentFlags = shadowActivity.nextStartedActivity.flags
+            val hasCorrectFlags = userIntentFlags and (Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK) == (Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+            assertTrue(messageActivityNotFinishing, activity.isFinishing or hasCorrectFlags)
+        }
+    }
+
+
     @Test
     fun testWrongPinErrorMessage() {
         testActivity {
@@ -173,7 +194,11 @@ class Stage5UnitTest : AbstractUnitTest<LoginActivity>(LoginActivity::class.java
             val expectedNextStartedActivityIntent = null
             val actualNextStartedActivityIntent = shadowActivity.nextStartedActivity
             val messageWrongIntent = "MainActivity should not start if the PIN is incorrect"
-            assertEquals(messageWrongIntent, expectedNextStartedActivityIntent, actualNextStartedActivityIntent)
+            assertEquals(
+                messageWrongIntent,
+                expectedNextStartedActivityIntent,
+                actualNextStartedActivityIntent
+            )
         }
     }
 }

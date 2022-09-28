@@ -21,6 +21,8 @@ class LoginActivity : AppCompatActivity() {
         loginBinding.btnLogin.setOnClickListener {
             if (loginBinding.etPin.text.toString() == PIN.toString()) {
                 val intent = Intent(this, MainActivity::class.java)
+                //intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                finish()
                 startActivity(intent)
             } else {
                 loginBinding.etPin.error = "Wrong PIN!"
