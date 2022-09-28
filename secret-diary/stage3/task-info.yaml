@@ -1,8 +1,0 @@
-type: edu
-files:
-- name: build.gradle
-  visible: false
-- name: src/test/java/org/hyperskill/secretdiary/Stage3UnitTest.kt
-  visible: false
-- name: src/test/java/org/hyperskill/secretdiary/internals/CustomClockSystemShadow.kt
-  visible: false

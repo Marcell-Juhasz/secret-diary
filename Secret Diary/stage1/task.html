@@ -1,0 +1,38 @@
+<h2>Description</h2>
+
+<p>In the first stage, you'll implement the basic diary functionality. Users should be able to enter a note they want and save it with a button. After this operation, the saved text should appear in the diary.</p>
+
+<h2>Objectives</h2>
+
+<ol>
+  <li>
+    Create the following components of the user interface with the appropriate features:
+    <ul>
+      <li>An <code>Activity</code> named <code>MainActivity</code></li>
+      <li>A <code>EditText</code> field with the <code>id</code> attribute set to <code>etNewWriting</code> and the <code>hint</code> attribute set to <code>Dear Diary...</code></li>
+      <li>A <code>Button</code> with the <code>id</code> of <code>btnSave</code> and the <code>text</code> <code>Save</code></li>
+      <li>A <code>TextView</code> with the <code>id</code> of <code>tvDiary</code> that shows the saved text after a click on the save button</li>
+    </ul>
+  </li>
+
+  <li>
+    Add the following functionalities to the application:
+    <ul>
+      <li>When the <code>Save</code> button is clicked, the diary should display exactly the same text as the user entered</li>
+      <li>If the diary already contains something, overwrite it</li>
+      <li>After every saving, clear the input field</li>
+    </ul>
+  </li>
+  <li>
+    Handle the exceptional cases:
+    <ul>
+      <li>When the <code>Save</code> button is clicked, and the input is either empty or contains only whitespace characters, the input should not be saved, and a <code>Toast</code> message should warn users with the following text: <code>Empty or blank input cannot be saved</code></li>
+    </ul>
+  </li>
+</ol>
+
+<h2>Example</h2>
+
+<p><strong>Example 1</strong>:</p>
+
+<p><img alt="" height="513" name="Stage1Example.gif" src="https://ucarecdn.com/66bec3ce-69cc-4b5b-bf86-ca0113e5ede1/" style="float: left;" width="288"></p>
