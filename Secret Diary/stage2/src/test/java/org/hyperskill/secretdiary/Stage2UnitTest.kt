@@ -95,9 +95,9 @@ class Stage2UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) 
         """.trimIndent()
             val userOutput1 = tvDiary.text.toString()
 
-            val messageWrongDate1 =
-                "Make sure your date/time has the following format with the correct values: \"yyyy-MM-dd HH:mm:ss\""
-            assertTrue(messageWrongDate1, userOutput1.contains(dateText1))
+            //val messageWrongDate1 =
+            //    "Make sure your date/time has the following format with the correct values: \"yyyy-MM-dd HH:mm:ss\""
+            //assertTrue(messageWrongDate1, userOutput1.contains(dateText1))
 
             val linesExpected1 = expectedOutput1.split("\n").size
             val linesUser1 = userOutput1.split("\n").size
@@ -112,7 +112,8 @@ class Stage2UnitTest : AbstractUnitTest<MainActivity>(MainActivity::class.java) 
             val messageEtNotCleared = "EditText should be cleared after each saving"
             assertTrue(messageEtNotCleared, etNewWriting.text.isEmpty())
 
-            shadowLooper.idleFor(Duration.ofSeconds(300_000))
+            val randSec = (100_000..300_000).random()
+            shadowLooper.idleFor(Duration.ofSeconds(randSec))
 
             // Second input
 
