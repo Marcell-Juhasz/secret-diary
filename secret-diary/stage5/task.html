@@ -1,23 +1,25 @@
 <h2>Description</h2>
 
-<p>The diary is ready to use, well done! But since we may write down our secrets, do not want others to access and read them. So, the last step is to protect the diary with a password that only the user knows.</p>
+<p>The diary is ready to use; well done! Since our diary keeps our secrets tight, we don&#39;t want others to access and read it.&nbsp;The last step is to protect the diary with a password known only to the user.</p>
 
-<p>To do this, you have to create a new <code>Activity</code> for the PIN, which is shown when the application is launched. If the user correctly enters the secret number, then tap the Log In button, they can access the diary and work with it like in the previous stage. If the PIN is incorrect, let the user know by showing an error message.</p>
+<p>For this, create a new <code>Activity</code> for the PIN that is shown when the application launches. If the user correctly enters the secret number and taps the <code>Log In</code> button, they can access the diary and work with it like in the previous stage. If the PIN is incorrect, let the user know by showing the error message.</p>
 
 <h2>Objectives</h2>
 
-<p>1. Create a new <code>Activity</code> named "LoginActivity" with the following components and set it to be the launcher activity:</p>
+<ol>
+    <li>Create the new <code>Activity</code> named <code>LoginActivity</code>&nbsp;with the following components and set it to be the launcher activity:
 
-<ul>
-    <li>A <code>TextView</code> with <code>id</code> &quot;tvTitle&quot; and <code>text</code> &quot;Secret Diary&quot;</li>
-    <li>An <code>EditText</code> with <code>id</code> attribute set to &quot;etPin&quot; that only accepts numeric input. Also, a <code>hint</code> &quot;Enter PIN&quot; should inform the user about the role of the input field.</li>
-    <li>A <code>Button</code> with &quot;btnLogIn&quot; <code>id</code> and &quot;Log In&quot; <code>text</code> property</li>
-</ul>
-
-<p>2. If the user presses the <code>Log In</code> button and the entered PIN is correct (PIN: 1234), launch the diary Activity you already implemented in the previous stages. Otherwise set the <code>error</code> property of the input text field to &quot;Wrong PIN!&quot;</p>
-
-<p>Obs: Tests assume the existence of LoginActivity class. Build will fail if that class has not been created yet.</p>
+        <ul>
+            <li>A <code>TextView</code> with <code>id</code>&nbsp;of <code>tvTitle</code>&nbsp;and <code>text</code> <code>Secret Diary</code>;</li>
+            <li>An <code>EditText</code> with <code>id</code> attribute set to <code>etPin</code>&nbsp;that only accepts the numeric input. Also, a <code>hint</code> <code>Enter PIN</code>&nbsp;should inform the user about the role of the input field;</li>
+            <li>A <code>Button</code> with the&nbsp;<code>btnLogIn</code>&nbsp;<code>id</code> and the <code>Log In</code>&nbsp;<code>text</code> property.</li>
+        </ul>
+    </li>
+    <li>If the user presses the <code>Log In</code> button, and the entered PIN is correct (the default PIN used in tests: <code>1234</code>), launch the diary Activity you implemented in the previous stages. Otherwise, set the <code>error</code> property of the input text field to <code>Wrong PIN!</code></li>
+</ol>
 
 <h2>Example</h2>
+
+<p><strong>Example 1</strong>:</p>
 
 <p><img alt="" height="566" name="Stage5Example.gif" src="https://ucarecdn.com/a2795943-6c32-4c4e-8f9d-7306657f02c8/" width="318" /></p>
